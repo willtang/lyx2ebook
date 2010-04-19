@@ -1,0 +1,19 @@
+lyx2ebook by Will Tang, copyright 2010 under the GPL version 3
+===============================================================================
+A simple LyX file to eBook converter.
+
+===============================================================================
+Uses Lepl parser to parse LyX file:
+
+http://www.acooke.org/lepl/
+
+Lepl by Andrew Cooke, copyright 2009-2010 under the Mozilla Public Licence 
+and the Lesser Gnu Public Licence. The documentation is licensed under
+the Gnu Free Documentation Licence. 
+
+
+Includes a lightly modified RP parser module, original web site:
+
+http://lparis45.free.fr/rp.html
+
+RP by L. Paris, copyright 2008 under the GNU General Public License

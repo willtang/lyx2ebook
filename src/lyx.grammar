@@ -1,0 +1,57 @@
+# parser options
+#option verbose
+option norun
+init lyx={}
+init parent=None
+init current=lyx
+init layout_name=""
+init layout_count=0
+
+# main
+lyx_file        ::= root_element (eol+ root_element )* eol*
+root_element    ::= format | document | comment
+document        ::= begin_document eol+ document_body eol* end_document
+begin_document  ::= \BEGIN_DOCUMENT @parent=current; current={}; parent["document"]=current
+end_document    ::= \END_DOCUMENT @current=parent; parent=None
+
+document_body   ::= (header | body)+
+
+header          ::= begin_header eol+ header_body eol* end_header eol*
+begin_header    ::= \BEGIN_HEADER @parent=current; current={}; parent["header"]=current
+end_header      ::= \END_HEADER @current=parent; parent=None
+
+header_body     ::= header_commands (eol header_commands)*
+header_commands ::= header_command
+#header_commands ::= header_command @text="""$header_command"""
+# 								   @header,command=text.split(None,1)
+# 								   @current[header]=command
+header_command  ::= (\TEXTCLASS | \USER_DEFAULT_OPTIONS) sentence
+
+body            ::= begin_body eol+ body_body eol* end_body eol*
+begin_body      ::= \BEGIN_BODY @parent=current; current={}; parent["body"]=current
+end_body        ::= \END_BODY @current=parent; parent=None
+
+body_body       ::= layout*
+
+layout          ::= begin_layout eol+ layout_body eol* end_layout eol*
+begin_layout    ::= \BEGIN_LAYOUT text @layout_name=str(layout_count)+" $text"; layout_count+=1
+end_layout      ::= \END_LAYOUT
+
+layout_body     ::= content @current[layout_name]="""$content"""
+
+format          ::= \LYXFORMAT number @current['format']=$number
+content         ::= sentence (eol+ sentence)*
+
+#splash          ::= \
+#command         ::= splash sentence
+
+comment         ::= # sentence
+
+# parse
+letter          ::= r"[a-zA-Z]"
+all_letter      ::= r"[a-zA-Z_]"
+digit           ::= r"[0-9]"
+eol             ::= r"\n"
+number          ::= digit+
+text            ::= all_letter+
+sentence        ::= r"[^\\\n]"+
