@@ -1,0 +1,14 @@
+LICENSE INFORMATION
+===================
+
+All the files in this distribution are covered under GPL except for library 
+mentioned below.
+
+
+Lepl parser
+===========
+http://www.acooke.org/lepl/
+
+Lepl by Andrew Cooke, copyright 2009-2010 under the Mozilla Public Licence 
+and the Lesser Gnu Public Licence. The documentation is licensed under
+the Gnu Free Documentation Licence. 

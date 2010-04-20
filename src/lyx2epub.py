@@ -22,7 +22,7 @@
 import sys
 import logging
 
-import Epub
+import EpubDocument
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger('lyx2epub')
@@ -34,9 +34,9 @@ def lyx2epub(lyx_file):
     
     # Should be changed to take in Ebook,
     # therefore easier to implement other source formats
-    epub = Epub.Epub(lyx_file)
+    epub = EpubDocument.EpubDocument(lyx_file)
     
-    epub.convert()
+    #epub.convert()
     
     return
 

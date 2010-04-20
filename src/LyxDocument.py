@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-    A class of LyX file.
+    A class of LyX Document.
     
     This file is part of lyx2ebook.
     
@@ -22,12 +22,14 @@
 import os
 import logging
 
-import Ebook
+import EbookDocument
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger('lyx2epub')
 
-class LyX(Ebook):
+class LyxDocument(EbookDocument.EbookDocument):
+    def __init__(self):
+        super(LyxDocument, self).__init__(self)
     
     def add_chapter(self, title, content):
         print "Adding: " + title

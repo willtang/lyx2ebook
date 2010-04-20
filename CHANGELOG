@@ -1,0 +1,9 @@
+CHANGELOG
+=========
+
+2010-04-20  Will Tang  <whitmenn@gmail.com>
+
+* Remove RP parser from the project as it is not quite
+  capable to handle LyX command starts with '\u'. It is
+  replaced by Lepl.
+

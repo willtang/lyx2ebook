@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-    A class of ePub file.
+    A class of ePub Document.
     
     This file is part of lyx2ebook.
     
@@ -22,17 +22,17 @@
 import os
 import logging
 
-import LyX
+import LyxDocument
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger('lyx2epub')
 
-class Epub:
+class EpubDocument:
     
     def __init__(self, source):
         self.source_file = source
-        self.folder, self.source_format = source_file.rsplit('.', 2)
-        self.set_base_folder(file_name)
+        self.folder, self.source_format = self.source_file.rsplit('.', 2)
+        self.set_base_folder(self.folder)
 
     def set_base_folder(self, folder):
         self.base_folder = folder

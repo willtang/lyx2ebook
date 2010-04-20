@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-    A super class of eBook file.
+    A class of eBook Document.
     
     This file is part of lyx2ebook.
     
@@ -19,10 +19,9 @@
 
 """
 
-class Ebook:
+class EbookDocument:
     
-    def __init__(self, source):
-        self.source_file = source
+    def __init__(self):
         self.title = "No Title"
         self.author = "Unknown Author"
         self.chapter_names = []
