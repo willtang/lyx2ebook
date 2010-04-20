@@ -16,25 +16,32 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
 """
 
 import sys
 import logging
+import logging.config
 
+import LyxDocument
 import EpubDocument
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger('lyx2epub')
+logging.config.fileConfig("logging.conf")
+logger = logging.getLogger('lyx2ebook')
 
 def lyx2epub(lyx_file):
     """
     Convert Lyx file to ePub file
     """
     
-    # Should be changed to take in Ebook,
-    # therefore easier to implement other source formats
-    epub = EpubDocument.EpubDocument(lyx_file)
+    lyx = LyxDocument.LyxDocument()
+    lyx.parse(lyx_file)
+    
+    logger.info("Title: " + lyx.title)
+    print "Author: ", lyx.author
+    print lyx.chapters
+    
+    epub = EpubDocument.EpubDocument()
     
     #epub.convert()
     
@@ -42,9 +49,9 @@ def lyx2epub(lyx_file):
 
 if __name__ == '__main__':
     """
-    Usage: lyx2epub file.lyx
-    
     Convert Lyx file to epub file.
+    
+    Usage: lyx2epub file.lyx
     """
     
     # Process Lyx file

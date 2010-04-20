@@ -19,7 +19,7 @@
 
 """
 
-class EbookDocument:
+class EbookDocument(object):
     
     def __init__(self):
         self.title = "No Title"

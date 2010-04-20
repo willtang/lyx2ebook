@@ -22,14 +22,18 @@
 import os
 import logging
 
-import LyxDocument
+from EbookDocument import EbookDocument
+from LyxDocument import LyxDocument
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger('lyx2epub')
+logging.config.fileConfig("logging.conf")
+logger = logging.getLogger('lyx2ebook')
 
-class EpubDocument:
+class EpubDocument(EbookDocument):
     
-    def __init__(self, source):
+    def __init__(self):
+        EbookDocument.__init__(self)
+    
+    def set_source(self, source):
         self.source_file = source
         self.folder, self.source_format = self.source_file.rsplit('.', 2)
         self.set_base_folder(self.folder)
@@ -133,7 +137,7 @@ hr.sigilChapterBreak {
         
         return
     
-    def write_chapter(title):
+    def write_chapter(self, title):
         
         pre = """<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
