@@ -9,6 +9,7 @@ What is lyx2ebook
 -----------------
 
 As its name implies, it is a simple LyX to eBook converter.
+It is written in Python 2.5.
 
 
 

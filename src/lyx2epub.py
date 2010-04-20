@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 """
     Convert LyX file to ePub file.
     
