@@ -19,9 +19,9 @@ Not much yet.
 
 h2. Usage
 
-<pre>
-  lyx2epub simple.lyx
-</pre>
+Convert LyX document to ePub file:
+
+bq. @lyx2epub simple.lyx@
 
 
 
