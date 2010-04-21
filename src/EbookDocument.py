@@ -26,3 +26,9 @@ class EbookDocument(object):
         self.author = "Unknown Author"
         self.chapter_names = []
         self.chapters = []
+        self.file_name = ""
+    
+    def set_file(self, name):
+        self.file_name = name
+        
+        return

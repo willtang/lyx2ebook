@@ -38,7 +38,8 @@ def lyx2epub(lyx_file):
     lyx.parse(lyx_file)
     
     logger.info("Title: " + lyx.title)
-    print "Author: ", lyx.author
+    logger.info("Author: " + lyx.author)
+    
     print lyx.chapters
     
     epub = EpubDocument.EpubDocument()

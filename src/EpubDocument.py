@@ -33,25 +33,19 @@ class EpubDocument(EbookDocument):
     def __init__(self):
         EbookDocument.__init__(self)
     
-    def set_source(self, source):
-        self.source_file = source
-        self.folder, self.source_format = self.source_file.rsplit('.', 2)
-        self.set_base_folder(self.folder)
-
-    def set_base_folder(self, folder):
-        self.base_folder = folder
+    def set_file(self, name):
+        EbookDocument.set_file(self, name);
+        
+        self.folder, self.format = self.file_name.rsplit('.', 2)
+        
+        self.base_folder = self.folder
         self.meta_folder = self.base_folder + "/META-INF"
         self.ops_folder = self.base_folder + "/OPS"
         self.css_folder = self.ops_folder + "/css"
         
         return
     
-    def convert(self):
-        
-#        if self.source_format.lower() == 'lyx':
-#            convert_from_lyx()
-#        else:
-#            logger.error("Unknown file type: " + self.source_format)
+    def convertFrom(self, source):
         
         logging.info("Converting to ePub...")
         
@@ -63,7 +57,7 @@ class EpubDocument(EbookDocument):
         
         write_css()
         
-        write_content()
+        write_content(source)
         
         return
     
@@ -85,10 +79,10 @@ class EpubDocument(EbookDocument):
         
         return
     
-    def write_content(self):
+    def write_content(self, source):
         logging.info("Writing content...")
         
-        convert()
+        # convert
         
         return
     

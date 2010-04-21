@@ -1,41 +1,43 @@
-README
-======
+h1. lyx2ebook
 
-lyx2ebook 0.1.0 alpha  
-
+0.1.0 alpha  
 
 
-What is lyx2ebook
------------------
+
+h2. What is lyx2ebook
 
 As its name implies, it is a simple LyX to eBook converter.
-It is written in Python 2.5.
+It is written in Python 2.6, and it requires the lepl module.
 
 
 
-Features
---------
+h2. Features
 
 Not much yet.
 
 
 
-License
--------
+h2. Usage
+
+<pre>
+  lyx2epub simple.lyx
+</pre>
+
+
+
+h2. License
 
 See the file LICENSE for license-related information.
 
 
 
-To-Do list
-----------
+h2. To-Do list
 
 See the file TODO for the to-do list.
 
 
 
-Author
-------
+h2. Author
 
 Will Tang
 
