@@ -26,7 +26,7 @@ def zipdir(dirPath=None, zipFilePath=None, includeDirInZip=True):
     for (archiveDirPath, dirNames, fileNames) in os.walk(dirPath):
         for fileName in fileNames:
             filePath = os.path.join(archiveDirPath, fileName)
-            outFile.write(filePath, trimPath(filePath))
+            outFile.write(filePath, trimPath(filePath), zipfile.ZIP_STORED)
         #Make sure we get empty directories as well
         if not fileNames and not dirNames:
             zipInfo = zipfile.ZipInfo(trimPath(archiveDirPath) + "/")
@@ -36,4 +36,5 @@ def zipdir(dirPath=None, zipFilePath=None, includeDirInZip=True):
             #zipInfo.external_attr = 48
             #Here to allow for inserting an empty directory.  Still TBD/TODO.
             outFile.writestr(zipInfo, "")
+    
     outFile.close()

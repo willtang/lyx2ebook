@@ -13,12 +13,13 @@ including those conforming to the relaxed constraints of OPS 2.0 -->
     <meta name="dtb:totalPageCount" content="0"/> <!-- must be 0 -->
     <meta name="dtb:maxPageNumber" content="0"/> <!-- must be 0 -->
   </head>
+
 <docTitle>
-  <text>No Title</text>
+  <text>Lorem Ipsum</text>
 </docTitle>
 
 <docAuthor>
-  <text>Unknown Author</text>
+  <text>Will Tang</text>
 </docAuthor>
 
 <navMap>

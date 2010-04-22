@@ -56,6 +56,8 @@ class EpubDocument(EbookDocument):
         
         print 'SOURCE:', source.chapters
         self.chapters = source.chapters
+        self.title = source.title
+        self.author = source.author
         
         return
     
@@ -71,12 +73,14 @@ class EpubDocument(EbookDocument):
         
         self._write_css()
         
-        self._write_content()
+        self._write_chapters()
         
-        self._write_navigation();
+        self._write_metadata()
+        
+        self._write_navigation()
         
         # Write zip file from the created folder
-        zipdir(self.base_folder, self.file_name, True)
+        zipdir(self.base_folder, self.file_name)
         
         return
     
@@ -104,8 +108,8 @@ class EpubDocument(EbookDocument):
         
         return
     
-    def _write_content(self):
-        logging.info("Writing content...")
+    def _write_chapters(self):
+        logging.info("Writing chapters...")
         
         for counter, chapter in enumerate(self.chapters):
             self._write_chapter(chapter, counter + 1)
@@ -197,7 +201,51 @@ hr.sigilChapterBreak {
         
         f.close()
         
-        return    
+        return
+    
+    def _write_metadata(self):
+        logging.info("Writing metadata file...")
+        
+        
+        f = open(self.ops_folder + '/book.opf', 'w')
+        
+        pre = """<?xml version="1.0"?>
+<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="GeneratedBookId">
+
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+    <dc:title>Lorem Ipsum</dc:title>
+    <dc:language>en</dc:language>
+    <dc:identifier id="BookId" opf:scheme="ISBN">123456789X</dc:identifier>
+    <dc:creator opf:file-as="Tang, Will" opf:role="tan">Will Tang</dc:creator>
+  </metadata>
+ 
+  <manifest>
+    <item id="chapter1" href="chapter1.xhtml" media-type="application/xhtml+xml"/>
+    <item id="chapter2" href="chapter2.xhtml" media-type="application/xhtml+xml"/>
+    <item id="chapter3" href="chapter3.xhtml" media-type="application/xhtml+xml"/>
+    <item id="stylesheet" href="page.css" media-type="text/css"/>
+    <item id="ncx" href="book.ncx" media-type="application/x-dtbncx+xml"/>
+  </manifest>
+ 
+  <spine toc="ncx">
+    <itemref idref="chapter1" />
+    <itemref idref="chapter2" />
+    <itemref idref="chapter3" />
+  </spine>
+
+"""
+        f.write(pre)
+        
+        
+        
+        post = """
+</package>
+"""
+        f.write(post)
+        
+        f.close()
+        
+        return
     
     def _write_navigation(self):
         logging.info("Writing Navigation Control file...")
@@ -219,6 +267,7 @@ including those conforming to the relaxed constraints of OPS 2.0 -->
     <meta name="dtb:totalPageCount" content="0"/> <!-- must be 0 -->
     <meta name="dtb:maxPageNumber" content="0"/> <!-- must be 0 -->
   </head>
+
 """
         f.write(pre)
         
