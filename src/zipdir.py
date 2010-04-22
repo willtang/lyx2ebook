@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 
+"""
+    Taken from web, by Peter Lyons:
+    
+    http://stackoverflow.com/questions/458436/adding-folders-to-a-zip-file-using-python
+
+"""
 import os
 import zipfile
+
 
 def zipdir(dirPath=None, zipFilePath=None, includeDirInZip=True):
 

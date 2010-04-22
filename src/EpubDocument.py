@@ -22,6 +22,7 @@
 import os
 import logging
 import zipfile
+from xml.dom.minidom import parse, parseString
 
 from zipdir import zipdir
 
@@ -37,6 +38,7 @@ class EpubDocument(EbookDocument):
         super(EpubDocument, self).__init__()
         
         self.zip = None
+        self.template_folder = "template"
     
     def set_file(self, name):
         super(EpubDocument, self).set_file(name);
@@ -44,9 +46,6 @@ class EpubDocument(EbookDocument):
         self.name, self.format = self.file_name.rsplit('.', 2)
         
         self.base_folder = self.name
-        self.meta_folder = self.base_folder + "/META-INF"
-        self.ops_folder = self.base_folder + "/OPS"
-        self.css_folder = self.ops_folder + "/css"
         
         return
     
@@ -79,7 +78,9 @@ class EpubDocument(EbookDocument):
         
         self._write_navigation()
         
-        # Write zip file from the created folder
+        # Write a new zip file from the created folder
+        if os.access(self.file_name, os.F_OK):
+            os.remove(self.file_name)
         zipdir(self.base_folder, self.file_name)
         
         return
@@ -91,18 +92,18 @@ class EpubDocument(EbookDocument):
         if not os.access(self.base_folder, os.F_OK):
             os.mkdir(self.base_folder)
         
-        if not os.access(self.meta_folder, os.F_OK):
-            os.mkdir(self.meta_folder)
+        if not os.access(self.base_folder + '/META-INF', os.F_OK):
+            os.mkdir(self.base_folder + '/META-INF')
         
         #self.zip.write(self.meta_folder)
         
-        if not os.access(self.ops_folder, os.F_OK):
-            os.mkdir(self.ops_folder)
+        if not os.access(self.base_folder + '/OPS', os.F_OK):
+            os.mkdir(self.base_folder + '/OPS')
         
         #self.zip.write(self.ops_folder)
         
-        if not os.access(self.css_folder, os.F_OK):
-            os.mkdir(self.css_folder)
+        if not os.access(self.base_folder + '/OPS/css', os.F_OK):
+            os.mkdir(self.base_folder + '/OPS/css')
         
         #self.zip.write(self.css_folder)
         
@@ -119,35 +120,26 @@ class EpubDocument(EbookDocument):
     def _write_css(self):
         logging.info("Writing CSS...");
         
-        f = open(self.css_folder + '/page.css', 'w')
-        css = """
-body {padding: 0;}
-
-hr.sigilChapterBreak {
-  border: none 0;
-  border-top: 3px double #c00;
-  height: 3px;
-  clear: both;
-}
-"""
-        f.write(css)
-        f.close()
+        fi = open(self.template_folder + '/OPS/css/style.css', 'r')
+        fo = open(self.base_folder + '/OPS/css/style.css', 'w')
+        
+        fo.write(fi.read())
+        
+        fi.close()
+        fo.close()
         
         return
     
     def _write_container(self):
         logging.info("Writing Container...")
         
-        f = open(self.meta_folder + '/container.xml', 'w')
-        mime = """<?xml version="1.0" encoding="UTF-8" ?>
-<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
-  <rootfiles>
-    <rootfile full-path="OPS/book.opf" media-type="application/oebps-package+xml"/>
-  </rootfiles>
-</container>
-"""
-        f.write(mime)
-        f.close()
+        fi = open(self.template_folder + '/META-INF/container.xml', 'r')
+        fo = open(self.base_folder + '/META-INF/container.xml', 'w')
+        
+        fo.write(fi.read())
+        
+        fi.close()
+        fo.close()
         
         return
     
@@ -163,54 +155,39 @@ hr.sigilChapterBreak {
     
     def _write_chapter(self, chapter, num):
         
-        f = open(self.ops_folder + '/chapter' + str(num) + '.xhtml', 'w')
+        f = open(self.base_folder + '/OPS/chapter' + str(num) + '.xhtml', 'w')
         
-        pre = """<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <title></title>
-  <style type="text/css">
-/*<![CDATA[*/
-  @import "page.css";
-  /*]]>*/
-  </style>
-</head>
-
-<body>
-"""
-        f.write(pre)
+        tmp = parse(self.template_folder + '/OPS/chapter.xhtml')
         
-        f.write('<div class="body chapter">\n')
+        es = tmp.getElementsByTagName('div')
+        for e in es:
+            xml = parseString('<div class="chapter"><h2><span class="chapterHeader"><span class="translation">' +
+                              'Chapter</span> <span class="count">' + str(num) + '</span></span> ' +
+                              chapter.title + '</h2></div>')
+            header = tmp.importNode(xml.childNodes[0], True)
+            e.appendChild(header)
+            
+            div = tmp.createElement("div")
+            e.appendChild(div)
+            
+            for para in chapter.text.split('\n'):
+                p = tmp.createElement("p")
+                p.appendChild(tmp.createTextNode(para))
+                div.appendChild(p)
         
-        f.write('  <h2>Chapter ' + str(num) + ' ' + chapter.title + '</h2>\n\n')
+        #print tmp.toprettyxml('  ', '\n', 'utf-8')
         
-        f.write('  <p>')
-        f.write(chapter.text)
-        f.write('</p>\n\n')
-        
-        f.write('</div>\n')
-        
-        post = """
-</body>
-</html>
-"""
-        f.write(post)
-        
-        f.close()
+        tmp.writexml(f, '  ', '  ', '\n', 'utf-8')
         
         return
     
     def _write_metadata(self):
         logging.info("Writing metadata file...")
         
-        
-        f = open(self.ops_folder + '/book.opf', 'w')
+        f = open(self.base_folder + '/OPS/book.opf', 'w')
         
         pre = """<?xml version="1.0"?>
-<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="GeneratedBookId">
+<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="123456789X">
 
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
     <dc:title>Lorem Ipsum</dc:title>
@@ -223,20 +200,22 @@ hr.sigilChapterBreak {
     <item id="chapter1" href="chapter1.xhtml" media-type="application/xhtml+xml"/>
     <item id="chapter2" href="chapter2.xhtml" media-type="application/xhtml+xml"/>
     <item id="chapter3" href="chapter3.xhtml" media-type="application/xhtml+xml"/>
-    <item id="stylesheet" href="page.css" media-type="text/css"/>
+    
+    <item id="stylesheet" href="css/style.css" media-type="text/css"/>
+    
     <item id="ncx" href="book.ncx" media-type="application/x-dtbncx+xml"/>
   </manifest>
  
   <spine toc="ncx">
-    <itemref idref="chapter1" />
-    <itemref idref="chapter2" />
-    <itemref idref="chapter3" />
+    <itemref idref="chapter1" linear="yes"/>
+    <itemref idref="chapter2" linear="yes"/>
+    <itemref idref="chapter3" linear="yes"/>
   </spine>
 
 """
         f.write(pre)
         
-        
+        # Changed the whole method
         
         post = """
 </package>
@@ -250,7 +229,7 @@ hr.sigilChapterBreak {
     def _write_navigation(self):
         logging.info("Writing Navigation Control file...")
         
-        f = open(self.ops_folder + '/book.ncx', 'w')
+        f = open(self.base_folder + '/OPS/book.ncx', 'w')
         
         pre = """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN"
@@ -267,6 +246,7 @@ including those conforming to the relaxed constraints of OPS 2.0 -->
     <meta name="dtb:totalPageCount" content="0"/> <!-- must be 0 -->
     <meta name="dtb:maxPageNumber" content="0"/> <!-- must be 0 -->
   </head>
+
 
 """
         f.write(pre)

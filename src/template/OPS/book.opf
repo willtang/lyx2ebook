@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="123456789X">
+
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+    <dc:title>Lorem Ipsum</dc:title>
+    <dc:language>en</dc:language>
+    <dc:identifier id="BookId" opf:scheme="ISBN">123456789X</dc:identifier>
+    <dc:creator opf:file-as="Tang, Will" opf:role="tan">Will Tang</dc:creator>
+  </metadata>
+ 
+  <manifest>
+    <item id="chapter1" href="chapter1.xhtml" media-type="application/xhtml+xml"/>
+    <item id="chapter2" href="chapter2.xhtml" media-type="application/xhtml+xml"/>
+    <item id="chapter3" href="chapter3.xhtml" media-type="application/xhtml+xml"/>
+    
+    <item id="stylesheet" href="css/style.css" media-type="text/css"/>
+    
+    <item id="ncx" href="book.ncx" media-type="application/x-dtbncx+xml"/>
+  </manifest>
+ 
+  <spine toc="ncx">
+    <itemref idref="chapter1" linear="yes"/>
+    <itemref idref="chapter2" linear="yes"/>
+    <itemref idref="chapter3" linear="yes"/>
+  </spine>
+
+
+</package>

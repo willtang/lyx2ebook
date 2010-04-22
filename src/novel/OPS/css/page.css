@@ -1,9 +1,0 @@
-
-body {padding: 0;}
-
-hr.sigilChapterBreak {
-  border: none 0;
-  border-top: 3px double #c00;
-  height: 3px;
-  clear: both;
-}

@@ -1,6 +1,6 @@
 TODO List
 =========
 
-- Finish lyx2epub
-- Zip the resulting epub file
-- Use XML library
+- Add more LyX commands
+- Add paragraph to EbookDocument
+- Use XML library instead of hard coding in NCX file
