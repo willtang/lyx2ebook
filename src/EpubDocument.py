@@ -21,6 +21,7 @@
 
 import os
 import logging
+import random
 import zipfile
 from xml.dom.minidom import parse, parseString
 
@@ -36,6 +37,11 @@ class EpubDocument(EbookDocument):
     
     def __init__(self):
         super(EpubDocument, self).__init__()
+        
+        self._dc = 'http://purl.org/dc/elements/1.1/'
+        self._opf = 'http://www.idpf.org/2007/opf'
+        
+        self.uid = 'Book_%05d' % random.randint(1, 99999)
         
         self.zip = None
         self.template_folder = "template"
@@ -156,28 +162,26 @@ class EpubDocument(EbookDocument):
     def _write_chapter(self, chapter, num):
         
         f = open(self.base_folder + '/OPS/chapter' + str(num) + '.xhtml', 'w')
+        doc = parse(self.template_folder + '/OPS/chapter.xhtml')
         
-        tmp = parse(self.template_folder + '/OPS/chapter.xhtml')
+        e = doc.getElementsByTagName('div')[0]
         
-        es = tmp.getElementsByTagName('div')
-        for e in es:
-            xml = parseString('<div class="chapter"><h2><span class="chapterHeader"><span class="translation">' +
-                              'Chapter</span> <span class="count">' + str(num) + '</span></span> ' +
-                              chapter.title + '</h2></div>')
-            header = tmp.importNode(xml.childNodes[0], True)
-            e.appendChild(header)
-            
-            div = tmp.createElement("div")
-            e.appendChild(div)
-            
-            for para in chapter.text.split('\n'):
-                p = tmp.createElement("p")
-                p.appendChild(tmp.createTextNode(para))
-                div.appendChild(p)
+        xml = parseString('<div class="chapter"><h2><span class="chapterHeader"><span class="translation">' +
+                          'Chapter</span> <span class="count">' + str(num) + '</span></span> ' +
+                          chapter.title + '</h2></div>')
+        header = doc.importNode(xml.firstChild, True)
+        e.appendChild(header)
         
-        #print tmp.toprettyxml('  ', '\n', 'utf-8')
+        div = doc.createElement('div')
+        e.appendChild(div)
         
-        tmp.writexml(f, '  ', '  ', '\n', 'utf-8')
+        for para in chapter.text.split('\n'):
+            p = doc.createElement('p')
+            p.appendChild(doc.createTextNode(para))
+            div.appendChild(p)
+        
+        doc.writexml(f, '\t', '\t', '\n', 'utf-8')
+        f.close()
         
         return
     
@@ -185,43 +189,47 @@ class EpubDocument(EbookDocument):
         logging.info("Writing metadata file...")
         
         f = open(self.base_folder + '/OPS/book.opf', 'w')
+        doc = parse(self.template_folder + '/OPS/book.opf')
         
-        pre = """<?xml version="1.0"?>
-<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="123456789X">
-
-  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
-    <dc:title>Lorem Ipsum</dc:title>
-    <dc:language>en</dc:language>
-    <dc:identifier id="BookId" opf:scheme="ISBN">123456789X</dc:identifier>
-    <dc:creator opf:file-as="Tang, Will" opf:role="tan">Will Tang</dc:creator>
-  </metadata>
- 
-  <manifest>
-    <item id="chapter1" href="chapter1.xhtml" media-type="application/xhtml+xml"/>
-    <item id="chapter2" href="chapter2.xhtml" media-type="application/xhtml+xml"/>
-    <item id="chapter3" href="chapter3.xhtml" media-type="application/xhtml+xml"/>
-    
-    <item id="stylesheet" href="css/style.css" media-type="text/css"/>
-    
-    <item id="ncx" href="book.ncx" media-type="application/x-dtbncx+xml"/>
-  </manifest>
- 
-  <spine toc="ncx">
-    <itemref idref="chapter1" linear="yes"/>
-    <itemref idref="chapter2" linear="yes"/>
-    <itemref idref="chapter3" linear="yes"/>
-  </spine>
-
-"""
-        f.write(pre)
+        identifier = doc.getElementsByTagNameNS(self._dc, 'identifier')[0]
+        identifier.appendChild(doc.createTextNode(self.uid))
         
-        # Changed the whole method
+        title = doc.getElementsByTagNameNS(self._dc, 'title')[0]
+        title.appendChild(doc.createTextNode(self.title))
         
-        post = """
-</package>
-"""
-        f.write(post)
+        creator = doc.getElementsByTagNameNS(self._dc, 'creator')[0]
+        creator.setAttributeNS(self._opf, 'opf:file-as', self.author)
+        creator.appendChild(doc.createTextNode(self.author))
         
+        manifest = doc.getElementsByTagName('manifest')[0]
+        spine = doc.getElementsByTagName('spine')[0]
+        for counter, chapter in enumerate(self.chapters):
+            ch_num = str(counter + 1)
+            
+            item = doc.createElement('item')
+            item.setAttribute('id', 'chapter' + ch_num)
+            item.setAttribute('href', 'chapter' + ch_num + '.xhtml')
+            item.setAttribute('media-type', 'application/xhtml+xml')
+            manifest.appendChild(item)
+        
+            itemref = doc.createElement('itemref')
+            itemref.setAttribute('idref', 'chapter' + ch_num)
+            itemref.setAttribute('linear', 'yes')
+            spine.appendChild(itemref)
+        
+        item = doc.createElement('item')
+        item.setAttribute('id', 'main-style')
+        item.setAttribute('href', 'css/style.css')
+        item.setAttribute('media-type', 'text/cs')
+        manifest.appendChild(item)
+        
+        item = doc.createElement('item')
+        item.setAttribute('id', 'ncx')
+        item.setAttribute('href', 'book.ncx')
+        item.setAttribute('media-type', 'application/x-dtbncx+xml')
+        manifest.appendChild(item)
+        
+        doc.writexml(f, '\t', '\t', '\n', 'utf-8')
         f.close()
         
         return
@@ -230,50 +238,44 @@ class EpubDocument(EbookDocument):
         logging.info("Writing Navigation Control file...")
         
         f = open(self.base_folder + '/OPS/book.ncx', 'w')
+        doc = parse(self.template_folder + '/OPS/book.ncx')
         
-        pre = """<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN"
-"http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
- 
-<ncx version="2005-1" xml:lang="en" xmlns="http://www.daisy.org/z3986/2005/ncx/">
- 
-  <head>
-<!-- The following four metadata items are required for all NCX documents,
-including those conforming to the relaxed constraints of OPS 2.0 -->
- 
-    <meta name="dtb:uid" content="123456789X"/> <!-- same as in .opf -->
-    <meta name="dtb:depth" content="1"/> <!-- 1 or higher -->
-    <meta name="dtb:totalPageCount" content="0"/> <!-- must be 0 -->
-    <meta name="dtb:maxPageNumber" content="0"/> <!-- must be 0 -->
-  </head>
-
-
-"""
-        f.write(pre)
+        meta = doc.getElementsByTagName('meta')
+        for m in meta:
+            if m.getAttribute('name') == 'dtb:uid':
+                m.setAttribute('content', self.uid)
         
-        f.write("<docTitle>\n")
-        f.write("  <text>" + self.title + "</text>\n")
-        f.write("</docTitle>\n\n")
+        docTitle = doc.getElementsByTagName('docTitle')[0]
+        text = doc.createElement('text')
+        text.appendChild(doc.createTextNode(self.title))
+        docTitle.appendChild(text)
         
-        f.write("<docAuthor>\n")
-        f.write("  <text>" + self.author + "</text>\n")
-        f.write("</docAuthor>\n\n")
+        docAuthor = doc.getElementsByTagName('docAuthor')[0]
+        text = doc.createElement('text')
+        text.appendChild(doc.createTextNode(self.author))
+        docAuthor.appendChild(text)
         
-        f.write("<navMap>\n\n")
-        
+        navMap = doc.getElementsByTagName('navMap')[0]
         for counter, chapter in enumerate(self.chapters):
             ch_num = str(counter + 1)
-            f.write('  <navPoint class="chapter" id="chapter' + ch_num + '" playOrder="' + ch_num + '">\n')
-            f.write('    <navLabel><text>Chapter ' + ch_num + '</text></navLabel>\n')
-            f.write('    <content src="chapter' + ch_num + '.xhtml"/>\n')
-            f.write('  </navPoint>\n\n')
+            
+            navPoint = doc.createElement('navPoint')
+            navPoint.setAttribute('class', 'chapter')
+            navPoint.setAttribute('id', ch_num)
+            navPoint.setAttribute('playOrder', ch_num)
+            navMap.appendChild(navPoint)
+            
+            navLabel = doc.createElement('navLabel')
+            text = doc.createElement('text')
+            text.appendChild(doc.createTextNode('Chapter ' + ch_num))
+            navLabel.appendChild(text)
+            navPoint.appendChild(navLabel)
+            
+            content = doc.createElement('content')
+            content.setAttribute('src', 'chapter' + ch_num + '.xhtml')
+            navPoint.appendChild(content)
         
-        f.write("</navMap>\n\n")
-        
-        post = """</ncx>
-"""
-        f.write(post)
-        
+        doc.writexml(f, '\t', '\t', '\n', 'utf-8')
         f.close()
         
         return

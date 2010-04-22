@@ -3,4 +3,4 @@ TODO List
 
 - Add more LyX commands
 - Add paragraph to EbookDocument
-- Use XML library instead of hard coding in NCX file
+- Enable style-sheet in Stanza
