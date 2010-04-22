@@ -19,43 +19,8 @@
 
 """
 
-import sys
-import logging
-import logging.config
-
-import LyxDocument
-import EpubDocument
-
-logging.config.fileConfig("logging.conf")
-logger = logging.getLogger('lyx2ebook')
-
-def lyx2epub(lyx_file):
-    """
-    Convert Lyx file to ePub file
-    """
+class Chapter(object):
     
-    lyx = LyxDocument.LyxDocument()
-    lyx.parse(lyx_file)
-    
-    logger.info("Title: " + lyx.title)
-    logger.info("Author: " + lyx.author)
-    
-    print lyx.chapters
-    
-    epub = EpubDocument.EpubDocument()
-    
-    epub.convert_from(lyx)
-    
-    epub.save()
-    
-    return
-
-if __name__ == '__main__':
-    """
-    Convert Lyx file to epub file.
-    
-    Usage: lyx2epub file.lyx
-    """
-    
-    # Process Lyx file
-    lyx2epub(sys.argv[1])
+    def __init__(self, title, content):
+        self.title = title
+        self.content = content

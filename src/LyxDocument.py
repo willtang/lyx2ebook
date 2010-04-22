@@ -24,7 +24,7 @@ import logging
 
 from lepl import *
 
-from EbookDocument import EbookDocument
+from EbookDocument import *
 
 logging.config.fileConfig("logging.conf")
 logger = logging.getLogger('lyx2ebook')
@@ -34,10 +34,24 @@ class LyxDocument(EbookDocument):
     def __init__(self):
         super(LyxDocument, self).__init__()
     
+    def process_standard(self, content):
+        
+        text = ""
+        for element in content:
+            if type(element) is unicode or type(element) is str:
+                if element != 'begin_layout Standard': 
+                    text += element + '\n'
+        
+        return text
+    
     def process_chapter(self, title, content):
         logger.debug("Adding chapter: " + title)
-        self.chapter_names.append(title)
-        self.chapters.append(content)
+        chapter = Chapter(title)
+        for standard in content:
+            chapter.add_text(self.process_standard(standard))
+        
+        #print "TEXT: ", chapter.text
+        self.add_chapter(chapter)
         
         return
     
@@ -99,6 +113,9 @@ class LyxDocument(EbookDocument):
         return
     
     def parse(self, file):
+        
+        super(LyxDocument, self).set_file(file)
+        
         # Match one or more new line
         newlines = ~Newline()[1:]
         

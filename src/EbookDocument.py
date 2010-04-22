@@ -24,7 +24,6 @@ class EbookDocument(object):
     def __init__(self):
         self.title = "No Title"
         self.author = "Unknown Author"
-        self.chapter_names = []
         self.chapters = []
         self.file_name = ""
     
@@ -32,3 +31,18 @@ class EbookDocument(object):
         self.file_name = name
         
         return
+    
+    def write_content(self):
+        logging.error("Write content function undefined.")
+    
+    def add_chapter(self, chapter):
+        self.chapters.append(chapter)
+
+class Chapter(object):
+    
+    def __init__(self, title):
+        self.title = title
+        self.text = ""
+    
+    def add_text(self, text):
+        self.text += text

@@ -21,6 +21,7 @@
 
 import os
 import logging
+import zipfile
 
 from EbookDocument import EbookDocument
 from LyxDocument import LyxDocument
@@ -31,65 +32,86 @@ logger = logging.getLogger('lyx2ebook')
 class EpubDocument(EbookDocument):
     
     def __init__(self):
-        EbookDocument.__init__(self)
+        super(EpubDocument, self).__init__()
+        
+        self.zip = None
     
     def set_file(self, name):
-        EbookDocument.set_file(self, name);
+        super(EpubDocument, self).set_file(name);
         
         self.folder, self.format = self.file_name.rsplit('.', 2)
         
-        self.base_folder = self.folder
-        self.meta_folder = self.base_folder + "/META-INF"
-        self.ops_folder = self.base_folder + "/OPS"
-        self.css_folder = self.ops_folder + "/css"
+        self.base_folder = self.folder + "/"
+        self.meta_folder = "META-INF/"
+        self.ops_folder = "OPS/"
+        self.css_folder = self.ops_folder + "css/"
         
         return
     
-    def convertFrom(self, source):
+    def convert_from(self, source):
+        name, self.format = source.file_name.rsplit('.', 2)
+        self.set_file(name + '.zip')
+        
+        self.chapters = source.chapters
+        
+        return
+    
+    def save(self):
         
         logging.info("Converting to ePub...")
         
-        create_folder()
+        #self.zip = zipfile.ZipFile(self.file_name, 'w', zipfile.ZIP_STORED)
         
-        write_mimetype()
+        self._create_folder()
         
-        write_container()
+        self._write_mimetype()
         
-        write_css()
+        self._write_container()
         
-        write_content(source)
+        self._write_css()
+        
+        self._write_content()
+        
+        #self.zip.close()
         
         return
     
-    def create_folder(self):
+    def _create_folder(self):
         
-        logging.info("Creating directories in " + self.folder + "...")
+        logging.info("Creating directories in " + self.base_folder + "...")
         
         if not os.access(self.base_folder, os.F_OK):
             os.mkdir(self.base_folder)
         
-        if not os.access(self.meta_folder, os.F_OK):
-            os.mkdir(self.meta_folder)
+        if not os.access(self.base_folder + self.meta_folder, os.F_OK):
+            os.mkdir(self.base_folder + self.meta_folder)
         
-        if not os.access(self.ops_folder, os.F_OK):
-            os.mkdir(self.ops_folder)
+        #self.zip.write(self.meta_folder)
         
-        if not os.access(self.css_folder, os.F_OK):
-            os.mkdir(self.css_folder)
+        if not os.access(self.base_folder + self.ops_folder, os.F_OK):
+            os.mkdir(self.base_folder + self.ops_folder)
+        
+        #self.zip.write(self.ops_folder)
+        
+        if not os.access(self.base_folder + self.css_folder, os.F_OK):
+            os.mkdir(self.base_folder + self.css_folder)
+        
+        #self.zip.write(self.css_folder)
         
         return
     
-    def write_content(self, source):
+    def _write_content(self):
         logging.info("Writing content...")
         
-        # convert
+        for counter, chapter in enumerate(self.chapters):
+            self._write_chapter(chapter, counter)
         
         return
     
-    def write_css(self):
+    def _write_css(self):
         logging.info("Writing CSS...");
         
-        f = open(self.css_folder + '/page.css', 'w')
+        f = open(self.base_folder + self.css_folder + 'page.css', 'w')
         css = """
 body {padding: 0;}
 
@@ -105,10 +127,10 @@ hr.sigilChapterBreak {
         
         return
     
-    def write_container(self):
+    def _write_container(self):
         logging.info("Writing Container...")
         
-        f = open(self.meta_folder + '/container.xml', 'w')
+        f = open(self.base_folder + self.meta_folder + 'container.xml', 'w')
         mime = """<?xml version="1.0" encoding="UTF-8" ?>
 <container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
   <rootfiles>
@@ -121,17 +143,19 @@ hr.sigilChapterBreak {
         
         return
     
-    def writeMimeType(self):
+    def _write_mimetype(self):
         logging.info("Writing MIME Type...")
         
-        f = open(self.base_folder + '/mimetype', 'w')
+        f = open(self.base_folder + 'mimetype', 'w')
         mime = "application/epub+zip"
         f.write(mime)
         f.close()
         
         return
     
-    def write_chapter(self, title):
+    def _write_chapter(self, chapter, num):
+        
+        f = open(self.base_folder + self.ops_folder + 'chapter' + str(num) + '.xhtml', 'w')
         
         pre = """<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -149,5 +173,24 @@ hr.sigilChapterBreak {
 
 <body>
 """
-        return
-    
+        f.write(pre)
+        
+        f.write('<div class="body chapter">\n')
+        
+        f.write('  <h2>Chapter ' + str(num) + ' ' + chapter.title + '</h2>\n\n')
+        
+        f.write('  <p>')
+        f.write(chapter.text)
+        f.write('</p>\n\n')
+        
+        f.write('</div>\n')
+        
+        post = """
+</body>
+</html>
+"""
+        f.write(post)
+        
+        f.close()
+        
+        return    
