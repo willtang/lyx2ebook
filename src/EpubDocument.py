@@ -23,6 +23,8 @@ import os
 import logging
 import zipfile
 
+from zipdir import zipdir
+
 from EbookDocument import EbookDocument
 from LyxDocument import LyxDocument
 
@@ -39,19 +41,20 @@ class EpubDocument(EbookDocument):
     def set_file(self, name):
         super(EpubDocument, self).set_file(name);
         
-        self.folder, self.format = self.file_name.rsplit('.', 2)
+        self.name, self.format = self.file_name.rsplit('.', 2)
         
-        self.base_folder = self.folder + "/"
-        self.meta_folder = "META-INF/"
-        self.ops_folder = "OPS/"
-        self.css_folder = self.ops_folder + "css/"
+        self.base_folder = self.name
+        self.meta_folder = self.base_folder + "/META-INF"
+        self.ops_folder = self.base_folder + "/OPS"
+        self.css_folder = self.ops_folder + "/css"
         
         return
     
     def convert_from(self, source):
         name, self.format = source.file_name.rsplit('.', 2)
-        self.set_file(name + '.zip')
+        self.set_file(name + '.epub')
         
+        print 'SOURCE:', source.chapters
         self.chapters = source.chapters
         
         return
@@ -59,8 +62,6 @@ class EpubDocument(EbookDocument):
     def save(self):
         
         logging.info("Converting to ePub...")
-        
-        #self.zip = zipfile.ZipFile(self.file_name, 'w', zipfile.ZIP_STORED)
         
         self._create_folder()
         
@@ -72,7 +73,10 @@ class EpubDocument(EbookDocument):
         
         self._write_content()
         
-        #self.zip.close()
+        self._write_navigation();
+        
+        # Write zip file from the created folder
+        zipdir(self.base_folder, self.file_name, True)
         
         return
     
@@ -83,18 +87,18 @@ class EpubDocument(EbookDocument):
         if not os.access(self.base_folder, os.F_OK):
             os.mkdir(self.base_folder)
         
-        if not os.access(self.base_folder + self.meta_folder, os.F_OK):
-            os.mkdir(self.base_folder + self.meta_folder)
+        if not os.access(self.meta_folder, os.F_OK):
+            os.mkdir(self.meta_folder)
         
         #self.zip.write(self.meta_folder)
         
-        if not os.access(self.base_folder + self.ops_folder, os.F_OK):
-            os.mkdir(self.base_folder + self.ops_folder)
+        if not os.access(self.ops_folder, os.F_OK):
+            os.mkdir(self.ops_folder)
         
         #self.zip.write(self.ops_folder)
         
-        if not os.access(self.base_folder + self.css_folder, os.F_OK):
-            os.mkdir(self.base_folder + self.css_folder)
+        if not os.access(self.css_folder, os.F_OK):
+            os.mkdir(self.css_folder)
         
         #self.zip.write(self.css_folder)
         
@@ -104,14 +108,14 @@ class EpubDocument(EbookDocument):
         logging.info("Writing content...")
         
         for counter, chapter in enumerate(self.chapters):
-            self._write_chapter(chapter, counter)
+            self._write_chapter(chapter, counter + 1)
         
         return
     
     def _write_css(self):
         logging.info("Writing CSS...");
         
-        f = open(self.base_folder + self.css_folder + 'page.css', 'w')
+        f = open(self.css_folder + '/page.css', 'w')
         css = """
 body {padding: 0;}
 
@@ -130,7 +134,7 @@ hr.sigilChapterBreak {
     def _write_container(self):
         logging.info("Writing Container...")
         
-        f = open(self.base_folder + self.meta_folder + 'container.xml', 'w')
+        f = open(self.meta_folder + '/container.xml', 'w')
         mime = """<?xml version="1.0" encoding="UTF-8" ?>
 <container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
   <rootfiles>
@@ -146,7 +150,7 @@ hr.sigilChapterBreak {
     def _write_mimetype(self):
         logging.info("Writing MIME Type...")
         
-        f = open(self.base_folder + 'mimetype', 'w')
+        f = open(self.base_folder + '/mimetype', 'w')
         mime = "application/epub+zip"
         f.write(mime)
         f.close()
@@ -155,7 +159,7 @@ hr.sigilChapterBreak {
     
     def _write_chapter(self, chapter, num):
         
-        f = open(self.base_folder + self.ops_folder + 'chapter' + str(num) + '.xhtml', 'w')
+        f = open(self.ops_folder + '/chapter' + str(num) + '.xhtml', 'w')
         
         pre = """<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -194,3 +198,53 @@ hr.sigilChapterBreak {
         f.close()
         
         return    
+    
+    def _write_navigation(self):
+        logging.info("Writing Navigation Control file...")
+        
+        f = open(self.ops_folder + '/book.ncx', 'w')
+        
+        pre = """<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN"
+"http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
+ 
+<ncx version="2005-1" xml:lang="en" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+ 
+  <head>
+<!-- The following four metadata items are required for all NCX documents,
+including those conforming to the relaxed constraints of OPS 2.0 -->
+ 
+    <meta name="dtb:uid" content="123456789X"/> <!-- same as in .opf -->
+    <meta name="dtb:depth" content="1"/> <!-- 1 or higher -->
+    <meta name="dtb:totalPageCount" content="0"/> <!-- must be 0 -->
+    <meta name="dtb:maxPageNumber" content="0"/> <!-- must be 0 -->
+  </head>
+"""
+        f.write(pre)
+        
+        f.write("<docTitle>\n")
+        f.write("  <text>" + self.title + "</text>\n")
+        f.write("</docTitle>\n\n")
+        
+        f.write("<docAuthor>\n")
+        f.write("  <text>" + self.author + "</text>\n")
+        f.write("</docAuthor>\n\n")
+        
+        f.write("<navMap>\n\n")
+        
+        for counter, chapter in enumerate(self.chapters):
+            ch_num = str(counter + 1)
+            f.write('  <navPoint class="chapter" id="chapter' + ch_num + '" playOrder="' + ch_num + '">\n')
+            f.write('    <navLabel><text>Chapter ' + ch_num + '</text></navLabel>\n')
+            f.write('    <content src="chapter' + ch_num + '.xhtml"/>\n')
+            f.write('  </navPoint>\n\n')
+        
+        f.write("</navMap>\n\n")
+        
+        post = """</ncx>
+"""
+        f.write(post)
+        
+        f.close()
+        
+        return

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN"
+"http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
+ 
+<ncx version="2005-1" xml:lang="en" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+ 
+  <head>
+<!-- The following four metadata items are required for all NCX documents,
+including those conforming to the relaxed constraints of OPS 2.0 -->
+ 
+    <meta name="dtb:uid" content="123456789X"/> <!-- same as in .opf -->
+    <meta name="dtb:depth" content="1"/> <!-- 1 or higher -->
+    <meta name="dtb:totalPageCount" content="0"/> <!-- must be 0 -->
+    <meta name="dtb:maxPageNumber" content="0"/> <!-- must be 0 -->
+  </head>
+<docTitle>
+  <text>No Title</text>
+</docTitle>
+
+<docAuthor>
+  <text>Unknown Author</text>
+</docAuthor>
+
+<navMap>
+
+  <navPoint class="chapter" id="chapter1" playOrder="1">
+    <navLabel><text>Chapter 1</text></navLabel>
+    <content src="chapter1.xhtml"/>
+  </navPoint>
+
+  <navPoint class="chapter" id="chapter2" playOrder="2">
+    <navLabel><text>Chapter 2</text></navLabel>
+    <content src="chapter2.xhtml"/>
+  </navPoint>
+
+  <navPoint class="chapter" id="chapter3" playOrder="3">
+    <navLabel><text>Chapter 3</text></navLabel>
+    <content src="chapter3.xhtml"/>
+  </navPoint>
+
+</navMap>
+
+</ncx>
