@@ -1,2 +1,4 @@
 # robots.txt for http://willtang.github.com/lyx2ebook/
 User-agent: *
+Allow: /
+
