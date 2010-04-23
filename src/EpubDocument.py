@@ -59,7 +59,7 @@ class EpubDocument(EbookDocument):
         name, self.format = source.file_name.rsplit('.', 2)
         self.set_file(name + '.epub')
         
-        print 'SOURCE:', source.chapters
+        #print 'SOURCE:', source.chapters
         self.chapters = source.chapters
         self.title = source.title
         self.author = source.author
@@ -175,9 +175,9 @@ class EpubDocument(EbookDocument):
         div = doc.createElement('div')
         e.appendChild(div)
         
-        for para in chapter.text.split('\n'):
+        for paragraph in chapter.paragraphs:
             p = doc.createElement('p')
-            p.appendChild(doc.createTextNode(para))
+            p.appendChild(doc.createTextNode(paragraph.text))
             div.appendChild(p)
         
         doc.writexml(f, '', '', '', 'utf-8')

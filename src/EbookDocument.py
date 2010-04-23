@@ -42,7 +42,12 @@ class Chapter(object):
     
     def __init__(self, title):
         self.title = title
-        self.text = ""
+        self.paragraphs = []
     
-    def add_text(self, text):
-        self.text += text
+    def add_paragraph(self, text):
+        self.paragraphs.append(Paragraph(text))
+
+class Paragraph(object):
+    
+    def __init__(self, text):
+        self.text = text

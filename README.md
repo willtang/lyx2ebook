@@ -29,20 +29,20 @@ Convert LyX document to ePub file:
 
 
 
+To-Do list
+----------
+
+- Add LyX Note support
+- Add more LyX commands
+- Enable style-sheet in Stanza
+- Check if it runs in Python 3
+
+
+
 License
 -------
 
 See the file LICENSE for license-related information.
-
-
-
-To-Do list
-----------
-
-- Add more LyX commands
-- Add paragraph to EbookDocument
-- Enable style-sheet in Stanza
-- Check if it runs in Python 3
 
 
 

@@ -1,10 +1,14 @@
 CHANGELOG
 =========
 
-2010-04-22  Will Tang  <whitmenn@gmail.com>
+2010-04-23  Will Tang  <whitmenn AT gmail DOT com>
+* Added child LyX document support.
+* Added paragraph in EbookDocument.
+
+2010-04-22  Will Tang  <whitmenn AT gmail DOT com>
 * Added XML support for ePub file processing.
 
-2010-04-20  Will Tang  <whitmenn@gmail.com>
+2010-04-20  Will Tang  <whitmenn AT gmail DOT com>
 
 * Remove RP parser from the project as it is not quite
   capable to handle LyX command starts with '\u'. It is

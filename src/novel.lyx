@@ -37,6 +37,7 @@
 \tracking_changes false
 \output_changes false
 \author "" 
+\author "" 
 \end_header
 
 \begin_body
@@ -49,6 +50,24 @@ Lorem Ipsum
 Will Tang
 \end_layout
 
+\begin_layout Date
+Characters:
+\begin_inset Newline newline
+\end_inset
+
+Dr.
+ Boswell W.
+ Freeman
+\begin_inset Newline newline
+\end_inset
+
+Genna
+\end_layout
+
+\begin_layout Date
+2010
+\end_layout
+
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include
@@ -59,17 +78,21 @@ filename "ch01.lyx"
 
 \end_layout
 
-
 \begin_layout Chapter
 Lorem Ipsum
 \end_layout
 
 \begin_layout Standard
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+ Aenean commodo ligula eget dolor.
+ Aenean massa.
 \end_layout
 
 \begin_layout Standard
-Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
+Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+ mus.
+ Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
+ Nulla consequat massa quis enim.
 \end_layout
 
 \begin_layout Chapter
@@ -77,15 +100,25 @@ Donec Pede Justo
 \end_layout
 
 \begin_layout Standard
-Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.
+Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.
+ In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
+ Nullam dictum felis eu pede mollis pretium.
 \end_layout
 
 \begin_layout Standard
-Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.
+Integer tincidunt.
+ Cras dapibus.
+ Vivamus elementum semper nisi.
+ Aenean vulputate eleifend tellus.
+ Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.
 \end_layout
 
 \begin_layout Standard
-Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue.
+Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.
+ Phasellus viverra nulla ut metus varius laoreet.
+ Quisque rutrum.
+ Aenean imperdiet.
+ Etiam ultricies nisi vel augue.
 \end_layout
 
 \begin_layout Chapter
@@ -93,11 +126,22 @@ Curabitur Ullamcorper
 \end_layout
 
 \begin_layout Standard
-Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.
+Curabitur ullamcorper ultricies nisi.
+ Nam eget dui.
+ Etiam rhoncus.
+ Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero,
+ sit amet adipiscing sem neque sed ipsum.
+ Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.
 \end_layout
 
 \begin_layout Standard
-Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna.
+Maecenas nec odio et ante tincidunt tempus.
+ Donec vitae sapien ut libero venenatis faucibus.
+ Nullam quis ante.
+ Etiam sit amet orci eget eros faucibus tincidunt.
+ Duis leo.
+ Sed fringilla mauris sit amet nibh.
+ Donec sodales sagittis magna.
 \end_layout
 
 \end_body

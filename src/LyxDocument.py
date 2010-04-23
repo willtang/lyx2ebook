@@ -41,7 +41,7 @@ class LyxDocument(EbookDocument):
         for element in content:
             if type(element) is unicode or type(element) is str:
                 if element != 'begin_layout Standard': 
-                    text += element + '\n'
+                    text += element
         
         return text
     
@@ -49,7 +49,7 @@ class LyxDocument(EbookDocument):
         logger.debug("Adding chapter: " + title)
         chapter = Chapter(title)
         for standard in content:
-            chapter.add_text(self.process_standard(standard))
+            chapter.add_paragraph(self.process_standard(standard))
         
         #print "TEXT: ", chapter.text
         self.add_chapter(chapter)
@@ -139,7 +139,7 @@ filename \"([\w\.]+)\"\n+\\\\end_inset\n+\\\\end_layout
         backslash = ~Literal('\\')
         
         # Match sentence
-        sentence = AnyBut(' \\') & Word()[:1] & (Space() & Word())[:] & Space()[:] > "".join
+        sentence = AnyBut('\\') & Word()[:1] & (Space() & Word())[:] & Space()[:] > "".join
         
         # Match comment which starts a new line with #
         comment = Literal('#') & AnyBut("\n\r")[:] & newlines
@@ -169,7 +169,7 @@ filename \"([\w\.]+)\"\n+\\\\end_inset\n+\\\\end_layout
         
         # Parse the LyX document
         preprocessed = self.preprocess(f.read())
-        print preprocessed
+        #print preprocessed
         result = lyx.parse(preprocessed)
         
         # Close the opened LyX document

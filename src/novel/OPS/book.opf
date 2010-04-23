@@ -2,7 +2,7 @@
 <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
 <dc:title>Lorem Ipsum</dc:title>
 <dc:language>en</dc:language>
-<dc:identifier id="BookId" opf:scheme="URL">Book_02294</dc:identifier>
+<dc:identifier id="BookId" opf:scheme="URL">Book_15074</dc:identifier>
 <dc:language>en</dc:language>
 <dc:creator opf:file-as="Will Tang" opf:role="aut">Will Tang</dc:creator>
 </metadata>
