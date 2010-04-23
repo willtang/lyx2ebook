@@ -1,47 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-	<package unique-identifier="123456789X" version="2.0" xmlns="http://www.idpf.org/2007/opf">
-		
-
-		<metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
-			
-
-			<dc:title>
-				Lorem Ipsum
-			</dc:title>
-			
-
-			<dc:language>
-				en
-			</dc:language>
-			
-
-			<dc:identifier id="BookId" opf:scheme="URL">
-				Book_18159
-			</dc:identifier>
-			
-
-			<dc:creator opf:file-as="Will Tang" opf:role="aut">
-				Will Tang
-			</dc:creator>
-			
-
-		</metadata>
-		
-
-		<manifest>
-			<item href="chapter1.xhtml" id="chapter1" media-type="application/xhtml+xml"/>
-			<item href="chapter2.xhtml" id="chapter2" media-type="application/xhtml+xml"/>
-			<item href="chapter3.xhtml" id="chapter3" media-type="application/xhtml+xml"/>
-			<item href="css/style.css" id="main-style" media-type="text/cs"/>
-			<item href="book.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>
-		</manifest>
-		
-
-		<spine toc="ncx">
-			<itemref idref="chapter1" linear="yes"/>
-			<itemref idref="chapter2" linear="yes"/>
-			<itemref idref="chapter3" linear="yes"/>
-		</spine>
-		
-
-	</package>
+<?xml version="1.0" encoding="utf-8"?><package unique-identifier="123456789X" version="2.0" xmlns="http://www.idpf.org/2007/opf">
+<metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+<dc:title>Lorem Ipsum</dc:title>
+<dc:language>en</dc:language>
+<dc:identifier id="BookId" opf:scheme="URL">Book_02294</dc:identifier>
+<dc:language>en</dc:language>
+<dc:creator opf:file-as="Will Tang" opf:role="aut">Will Tang</dc:creator>
+</metadata>
+<manifest><item href="chapter1.xhtml" id="chapter1" media-type="application/xhtml+xml"/><item href="chapter2.xhtml" id="chapter2" media-type="application/xhtml+xml"/><item href="chapter3.xhtml" id="chapter3" media-type="application/xhtml+xml"/><item href="chapter4.xhtml" id="chapter4" media-type="application/xhtml+xml"/><item href="css/style.css" id="main-style" media-type="text/cs"/><item href="book.ncx" id="ncx" media-type="application/x-dtbncx+xml"/></manifest>
+<spine toc="ncx"><itemref idref="chapter1" linear="yes"/><itemref idref="chapter2" linear="yes"/><itemref idref="chapter3" linear="yes"/><itemref idref="chapter4" linear="yes"/></spine>
+</package>

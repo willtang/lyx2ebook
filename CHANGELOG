@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+2010-04-22  Will Tang  <whitmenn@gmail.com>
+* Added XML support for ePub file processing.
+
 2010-04-20  Will Tang  <whitmenn@gmail.com>
 
 * Remove RP parser from the project as it is not quite

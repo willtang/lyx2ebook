@@ -4,6 +4,7 @@
 <dc:title />
 <dc:language>en</dc:language>
 <dc:identifier id="BookId" opf:scheme="URL" />
+<dc:language>en</dc:language>
 <dc:creator opf:role="aut" />
 </metadata>
 <manifest />

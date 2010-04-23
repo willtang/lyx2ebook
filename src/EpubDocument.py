@@ -180,7 +180,7 @@ class EpubDocument(EbookDocument):
             p.appendChild(doc.createTextNode(para))
             div.appendChild(p)
         
-        doc.writexml(f, '\t', '\t', '\n', 'utf-8')
+        doc.writexml(f, '', '', '', 'utf-8')
         f.close()
         
         return
@@ -229,7 +229,7 @@ class EpubDocument(EbookDocument):
         item.setAttribute('media-type', 'application/x-dtbncx+xml')
         manifest.appendChild(item)
         
-        doc.writexml(f, '\t', '\t', '\n', 'utf-8')
+        doc.writexml(f, '', '', '', 'utf-8')
         f.close()
         
         return
@@ -275,7 +275,7 @@ class EpubDocument(EbookDocument):
             content.setAttribute('src', 'chapter' + ch_num + '.xhtml')
             navPoint.appendChild(content)
         
-        doc.writexml(f, '\t', '\t', '\n', 'utf-8')
+        doc.writexml(f, '', '', '', 'utf-8')
         f.close()
         
         return

@@ -15,7 +15,8 @@ It is written in Python 2.6, and it requires the lepl module.
 Features
 --------
 
-Not much yet.
+- Convert from LyX file, but ignore most formatting.
+- Convert to ePub 2.0 file.
 
 
 
@@ -38,7 +39,10 @@ See the file LICENSE for license-related information.
 To-Do list
 ----------
 
-See the file TODO for the to-do list.
+- Add more LyX commands
+- Add paragraph to EbookDocument
+- Enable style-sheet in Stanza
+- Check if it runs in Python 3
 
 
 

@@ -21,6 +21,7 @@
 
 import os
 import logging
+import re
 
 from lepl import *
 
@@ -112,6 +113,22 @@ class LyxDocument(EbookDocument):
         
         return
     
+    def preprocess(self, text):
+        """
+        Handle included LyX child document
+        """
+        def replace_included(match):
+            #print 'Opening: ', match.group(1)
+            f = open(match.group(1), 'r')
+            result = re.search('\\\\begin_body(.+)\\\\end_body', f.read(), re.DOTALL).group(1)
+            #print 'Content: ', result
+            f.close()
+            return result
+        
+        return re.sub("""\\\\begin_layout Standard\n+\\\\begin_inset CommandInset include\n+LatexCommand include
+filename \"([\w\.]+)\"\n+\\\\end_inset\n+\\\\end_layout
+""", replace_included, text)
+    
     def parse(self, file):
         
         super(LyxDocument, self).set_file(file)
@@ -130,14 +147,18 @@ class LyxDocument(EbookDocument):
         # Match command in the format of "\XXX YYY ZZZ ..."
         command = backslash & sentence & newlines > "".join
         
+        inset = backslash & Literal('begin_inset') & (Space() & sentence)[:1] & newlines & (sentence & newlines)[:] & backslash & ~Literal('end_inset') & newlines > list
+        content = ((sentence & newlines) | inset)[:]
+        
         # Main LyX document definition
         #layout = backslash & Literal('begin_layout') & (Space() & Word())[:] & newlines & (sentence & newlines)[:] & backslash & ~Literal('end_layout') & newlines > list
-        standard = backslash & Literal('begin_layout Standard') & newlines & (sentence & newlines)[:] & backslash & ~Literal('end_layout') & newlines > list
+        standard = backslash & Literal('begin_layout Standard') & newlines & content & backslash & ~Literal('end_layout') & newlines > list
         chapter = backslash & Literal('begin_layout Chapter') & newlines & (sentence & newlines)[:] & backslash & ~Literal('end_layout') & newlines & standard[:] & newlines > list
+        date = backslash & Literal('begin_layout Date') & newlines & content & backslash & ~Literal('end_layout') & newlines > list
         author = backslash & Literal('begin_layout Author') & newlines & (sentence & newlines)[:] & backslash & ~Literal('end_layout') & newlines > list
         title = backslash & Literal('begin_layout Title') & newlines & (sentence & newlines)[:] & backslash & ~Literal('end_layout') & newlines > list
-        content = (title | author | chapter)
-        body = backslash & Literal('begin_body') & newlines & content[:] & backslash & ~Literal('end_body') & newlines > list
+        body_content = (title | author | ~date | standard | chapter)
+        body = backslash & Literal('begin_body') & newlines & body_content[:] & backslash & ~Literal('end_body') & newlines > list
         header = backslash & Literal('begin_header') & newlines & command[:] & backslash & ~Literal('end_header') & newlines > list
         document = backslash & Literal('begin_document') & newlines & header & body & backslash & ~Literal('end_document') & newlines > list
         root = document | command | ~comment
@@ -147,7 +168,9 @@ class LyxDocument(EbookDocument):
         f = open(file, 'r')
         
         # Parse the LyX document
-        result = lyx.parse(f.read())
+        preprocessed = self.preprocess(f.read())
+        print preprocessed
+        result = lyx.parse(preprocessed)
         
         # Close the opened LyX document
         f.close()
