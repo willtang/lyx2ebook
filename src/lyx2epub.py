@@ -55,5 +55,9 @@ if __name__ == '__main__':
     Usage: lyx2epub file.lyx
     """
     
+    print 'Converting', sys.argv[1]
+    
     # Process Lyx file
     lyx2epub(sys.argv[1])
+    
+    print 'Converted'
