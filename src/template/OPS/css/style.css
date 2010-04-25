@@ -57,6 +57,11 @@ blockquote p, li p {
   float:left;
   padding:0px;
   background-color:#FFF;}
+
+.chapterHeader .chapterTitle {
+  font-weight: normal;
+  font-size:20px;
+  background-color:#FFF;}
   
 div.body {}
 

@@ -165,8 +165,8 @@ class EpubDocument(EbookDocument):
         e = doc.getElementsByTagName('div')[0]
         
         xml = parseString('<div class="chapter"><h2><span class="chapterHeader"><span class="translation">' +
-                          'Chapter</span> <span class="count">' + str(num) + '</span></span> ' +
-                          chapter.title + '</h2></div>')
+                          'Chapter</span> <span class="count">' + str(num) + '</span><br /><span class="chapterTitle">' +
+                          chapter.title + '</span></span></h2><br /></div>')
         header = doc.importNode(xml.firstChild, True)
         e.appendChild(header)
         
