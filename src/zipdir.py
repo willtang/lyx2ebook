@@ -11,7 +11,9 @@ import zipfile
 
 
 def zipdir(dirPath=None, zipFilePath=None, includeDirInZip=True):
-
+    
+    print 'Zipping of directory: ', dirPath, ' to ', zipFilePath
+    
     if not zipFilePath:
         zipFilePath = dirPath + ".zip"
     if not os.path.isdir(dirPath):

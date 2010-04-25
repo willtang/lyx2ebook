@@ -126,7 +126,7 @@ class LyxDocument(EbookDocument):
             return result
         
         return re.sub("""\\\\begin_layout Standard\n+\\\\begin_inset CommandInset include\n+LatexCommand include
-filename \"([\w\.]+)\"\n+\\\\end_inset\n+\\\\end_layout
+filename \"([\w \.]+)\"\n+\\\\end_inset\n+\\\\end_layout
 """, replace_included, text)
     
     def parse(self, file):
@@ -169,7 +169,7 @@ filename \"([\w\.]+)\"\n+\\\\end_inset\n+\\\\end_layout
         
         # Parse the LyX document
         preprocessed = self.preprocess(f.read())
-        #print preprocessed
+        print preprocessed
         result = lyx.parse(preprocessed)
         
         # Close the opened LyX document

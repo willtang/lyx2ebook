@@ -87,7 +87,7 @@ class EpubDocument(EbookDocument):
         # Write a new zip file from the created folder
         if os.access(self.file_name, os.F_OK):
             os.remove(self.file_name)
-        zipdir(self.base_folder, self.file_name)
+        zipdir(self.base_folder, self.file_name, False)
         
         return
     
