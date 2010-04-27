@@ -22,10 +22,11 @@
 class EbookDocument(object):
     
     def __init__(self):
-        self.title = "No Title"
-        self.author = "Unknown Author"
+        self.title = 'No Title'
+        self.author = 'Unknown Author'
         self.chapters = []
-        self.file_name = ""
+        self.file_name = ''
+        self.file_ext = '.ebk'
     
     def set_file(self, name):
         self.file_name = name
@@ -37,6 +38,17 @@ class EbookDocument(object):
     
     def add_chapter(self, chapter):
         self.chapters.append(chapter)
+    
+    def convert_from(self, source):
+        name, self.format = source.file_name.rsplit('.', 2)
+        self.set_file(name + self.file_ext)
+        
+        #print 'SOURCE:', source.chapters
+        self.chapters = source.chapters
+        self.title = source.title
+        self.author = source.author
+        
+        return
 
 class Chapter(object):
     

@@ -36,6 +36,8 @@ class EpubDocument(EbookDocument):
     def __init__(self):
         super(EpubDocument, self).__init__()
         
+        self.file_ext = '.epub'
+        
         self._dc = 'http://purl.org/dc/elements/1.1/'
         self._opf = 'http://www.idpf.org/2007/opf'
         
@@ -54,13 +56,7 @@ class EpubDocument(EbookDocument):
         return
     
     def convert_from(self, source):
-        name, self.format = source.file_name.rsplit('.', 2)
-        self.set_file(name + '.epub')
-        
-        #print 'SOURCE:', source.chapters
-        self.chapters = source.chapters
-        self.title = source.title
-        self.author = source.author
+        super(EpubDocument, self).convert_from(source)
         
         return
     
