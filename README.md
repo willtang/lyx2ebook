@@ -1,6 +1,6 @@
 lyx2ebook
 =========
-0.1.0 alpha  
+0.1.1 alpha  
 
 
 What is lyx2ebook
@@ -8,7 +8,7 @@ What is lyx2ebook
 
 As its name implies, it is a simple LyX to eBook converter.
 
-It is written in Python 2.6, and it requires the lepl module.
+It is written in Python 2.6.
 
 
 
@@ -28,13 +28,17 @@ Convert LyX document to ePub file:
     lyx2epub simple.lyx
 
 
+Convert LyX document to Rich Text Format file:
+
+    lyx2rtf simple.lyx
+
+
 
 To-Do list
 ----------
 
 - Add LyX Note support
 - Add more LyX commands
-- Enable style-sheet in Stanza
 - Check if it runs in Python 3
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-    Convert LyX file to RTF file.
+    Convert LyX file to Rich Text Format file.
     
     This file is part of lyx2ebook.
     
@@ -50,7 +50,7 @@ def lyx2rtf(lyx_file):
 
 if __name__ == '__main__':
     """
-    Convert Lyx file to RTF file.
+    Convert Lyx file to Rich Text Format file.
     
     Usage: lyx2rtf file.lyx
     """
