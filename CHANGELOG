@@ -4,6 +4,9 @@ CHANGELOG
 2010-04-28  Will Tang  <whitmenn AT gmail DOT com>
 * Added Rich Text Format document support.
 
+2010-04-24  Will Tang  <whitmenn AT gmail DOT com>
+* Fixed zip and stylesheet issues.
+
 2010-04-23  Will Tang  <whitmenn AT gmail DOT com>
 * Added child LyX document support.
 * Added paragraph in EbookDocument.
